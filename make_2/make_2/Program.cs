@@ -7,7 +7,7 @@ namespace make_2
     {
        
 
-        static int Main()
+        static int Main()   
         {
 
             Class1 c1 = new Class1();
@@ -21,7 +21,7 @@ namespace make_2
             Console.Write("enter number of shapes\n");
             c1.numOfShapes = int.Parse(ConsoleInput.ReadToWhiteSpace(true));
             if (c1.numOfShapes < 4 || c1.numOfShapes > 5) //validation on the number of shapes to be 4 or 5
-            {
+            {       
                 Console.Write("wrong input");
                 return 0;
             }

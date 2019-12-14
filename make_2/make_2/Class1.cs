@@ -187,13 +187,11 @@ namespace make_2
                             break;
                         }
                     }
-                    if (findMatch(new List<List<int>>(solM), new List<List<int>>(shape), tempi, tempj, i, j))
+                    if (findMatch(solM, shape, tempi, tempj, i, j))
                     {
-                        Console.WriteLine("before enter 2");
-                        fit1(new List<List<int>>(solM), new List<List<int>>(shape), tempi, tempj, i, j);
+                        fit1(solM, shape, tempi, tempj, i, j);
                     }
                 }
-                Console.WriteLine("after for loop  solve 1");
 
             }
         }
@@ -263,13 +261,11 @@ namespace make_2
                             break;
                         }
                     }
-                    if (findMatch(new List<List<int>>(solM), new List<List<int>>(shape), tempi, tempj, i, j))
+                    if (findMatch(solM, shape, tempi, tempj, i, j))
                     {
-                        fit2(new List<List<int>>(solM), new List<List<int>>(shape), tempi, tempj, i, j);
+                        fit2(solM, shape, tempi, tempj, i, j);
                     }
                 }
-                Console.WriteLine("after for loop solve 2");
-
             }
         }
         public void solve3(List<List<int>> solM, List<List<int>> shape)
@@ -338,14 +334,12 @@ namespace make_2
                             break;
                         }
                     }
-                    if (findMatch(new List<List<int>>(solM), new List<List<int>>(shape), tempi, tempj, i, j))
+                    if (findMatch (solM, shape, tempi, tempj, i, j))
                     {
-                        fit3(new List<List<int>>(solM), new List<List<int>>(shape), tempi, tempj, i, j);
+                        fit3(solM, shape, tempi, tempj, i, j);
                     }
                 }
             }
-            Console.WriteLine("after for loop solve 3");
-
         }
         public void solve4(List<List<int>> solM, List<List<int>> shape)
         {
@@ -411,15 +405,13 @@ namespace make_2
                             break;
                         }
                     }
-                    if (findMatch(new List<List<int>>(solM), new List<List<int>>(shape), tempi, tempj, i, j))
+                    if (findMatch(solM, shape, tempi, tempj, i, j))
                     {
                         Console.WriteLine("before if fit 4");
-                        fit4(new List<List<int>>(solM), new List<List<int>>(shape), tempi, tempj, i, j);
+                        fit4(solM, shape, tempi, tempj, i, j);
                     }
                 }
             }
-            Console.WriteLine("after for loop solve 4");
-
         }
         public void solve5(List<List<int>> solM, List<List<int>> shape)
         {
@@ -487,18 +479,44 @@ namespace make_2
                             break;
                         }
                     }
-                    if (findMatch(new List<List<int>>(solM), new List<List<int>>(shape), tempi, tempj, i, j))
+                    if (findMatch(solM, shape, tempi, tempj, i, j))
                     {
-                        fit5(new List<List<int>>(solM), new List<List<int>>(shape), tempi, tempj, i, j);
+                        fit5(solM, shape, tempi, tempj, i, j);
                     }
                 }
 
             }
-            Console.WriteLine("after for loop solve ");
-
         }
 
-        public void fit1(List<List<int>> solM, List<List<int>> shape, int tempi, int tempj, int i, int j)
+
+
+    private void swapElement(ref int a, ref int b)
+    {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+    private List<List<int>> swapColumn(List<List<int>> arr, int col, int rows)
+    {
+        int colMirror = arr[0].Count - col - 1;
+        for (int row = 0; row < rows; row++)
+        {
+            swapElement(ref(arr[row][col]), ref(arr[row][colMirror]));
+        }
+        return arr;
+    }
+    private List<List<int>> flipVertical(List<List<int>>arr, int cols, int rows)
+    {
+        int axis = cols / 2;
+        for (int col = 0; col < axis; col++)
+        {
+            arr = swapColumn(arr, col, rows);
+        }
+        return arr;
+    }
+
+
+    public void fit1(List<List<int>> solM, List<List<int>> shape, int tempi, int tempj, int i, int j)
         {
 
             int q;
@@ -518,38 +536,43 @@ namespace make_2
                 }
                 q++;
             }
-            Console.WriteLine("before enter solve 2");
             //shape without rotation or flipping
-            solve2(new List<List<int>>(solM), new List<List<int>>(shape2));
+            solve2(solM, shape2);
 
             //shape without rotation with flipping H
-            List<List<int>> fliph = flipH(new List<List<int>>(shape2));
-            solve2(new List<List<int>>(solM), new List<List<int>>(fliph));
+            List<List<int>> fliph = new List<List<int>>();
+            fliph = flipH(shape2);
+            solve2(solM, fliph);
 
             //shape without rotation with flipping V
-            List<List<int>> flipv = flipV(new List<List<int>>(shape2));
+            List<List<int>> flipv = new List<List<int>>();
+            flipv = flipVertical(shape2, shape2[0].Count, shape2.Count);
             //solve2(solM, flipv);
-
+            
             //shape without rotation with flipping V and flipping H
-            List<List<int>> flipvh = flipH(new List<List<int>>(flipv));
+            List<List<int>> flipvh = flipH(flipv    );
             //solve2(solM, flipvh);
 
             /////////////////////////////////////////
 
             //shape rotated 90d without flipping
-            List<List<int>> rotated = rotateVector(new List<List<int>>(shape2), shape2.Count, shape2[0].Count);
-            solve2(new List<List<int>>(solM), new List<List<int>>(rotated));
+            List<List<int>> rotated = new List<List<int>>();
+            rotated = rotateVector(shape2, shape2.Count, shape2[0].Count);
+            solve2(solM, rotated);
 
             //shape rotated 90d with flipping H
-            List<List<int>> rfliph = flipH(new List<List<int>>(rotated));
-            solve2(new List<List<int>>(solM), new List<List<int>>(rfliph));
+            List<List<int>> rfliph = new List<List<int>>();
+            rfliph = flipH(rotated);
+            solve2(solM, rfliph);
 
             //shape rotated 90d with flipping V
-            List<List<int>> rflipv = flipV(new List<List<int>>(rotated));
+            List<List<int>> rflipv = new List<List<int>>();
+            rflipv = flipVertical(rotated, rotated[0].Count, rotated.Count);
             //solve2(solM, rflipv);
 
             //shape rotated 90d with flipping V and flipping H
-            List<List<int>> rflipvh = flipH(new List<List<int>>(rflipv));
+            List<List<int>> rflipvh = new List<List<int>>();
+            rflipvh = flipH(rflipv);
             //solve2(solM, rflipvh);
 
             //////////////////////////////////////////
@@ -572,13 +595,13 @@ namespace make_2
             solve2(solM, rotated2);
             //shape rotated 270d with flipping H
             vector<vector<int> > r270fliph = flipH(rotated2);
-            //solve2(solM, r270fliph);
+            //solve4(solM, r270fliph);
             //shape rotated 270 with flipping V
             vector<vector<int> >r270flipv = flipV(rotated2);
-            //solve2(solM, r270flipv);
+            //solve4(solM, r270flipv);
             //shape rotated 270d with flipping V and flipping H
             vector<vector<int> > r270flipvh = flipH(r270flipv);
-            //solve2(solM, r270flipvh);
+            //solve4(solM, r270flipvh);
             */
         }
 
@@ -602,38 +625,43 @@ namespace make_2
                 q++;
             }
             //shape without rotation or flipping
-            solve3(new List<List<int>>(solM), new List<List<int>>(shape3));
+            solve3(solM, shape3);
 
             //shape without rotation with flipping H
-            List<List<int>> fliph = flipH(new List<List<int>>(shape3));
-            solve3(new List<List<int>>(solM), new List<List<int>>(fliph));
+            List<List<int>> fliph = new List<List<int>>();
+            fliph = flipH(shape3);
+            solve3(solM, fliph);
 
             //shape without rotation with flipping V
-            List<List<int>> flipv = flipV(new List<List<int>>(shape3));
+            List<List<int>> flipv = new List<List<int>>();
+            flipv = flipVertical(shape3, shape3[0].Count, shape3.Count);
             //solve3(solM, flipv);
 
             //shape without rotation with flipping V and flipping H
-            List<List<int>> flipvh = flipH(new List<List<int>>(flipv));
+            List<List<int>> flipvh = flipH(flipv);
             //solve3(solM, flipvh);
 
             /////////////////////////////////////////
 
             //shape rotated 90d without flipping
-            List<List<int>> rotated = rotateVector(new List<List<int>>(shape3), shape3.Count, shape3[0].Count);
-            solve3(new List<List<int>>(solM), new List<List<int>>(rotated));
+            List<List<int>> rotated = new List<List<int>>();
+            rotated = rotateVector(shape3, shape3.Count, shape3[0].Count);
+            solve3(solM, rotated);
 
             //shape rotated 90d with flipping H
-            List<List<int>> rfliph = flipH(new List<List<int>>(rotated));
-            solve3(new List<List<int>>(solM), new List<List<int>>(rfliph));
+            List<List<int>> rfliph = new List<List<int>>();
+            rfliph = flipH(rotated);
+            solve3(solM, rfliph);
 
             //shape rotated 90d with flipping V
-            List<List<int>> rflipv = flipV(new List<List<int>>(rotated));
+            List<List<int>> rflipv = new List<List<int>>();
+            rflipv = flipVertical(rotated, rotated[0].Count, rotated.Count);
             //solve3(solM, rflipv);
 
             //shape rotated 90d with flipping V and flipping H
-            List<List<int>> rflipvh = flipH(new List<List<int>>(rflipv));
+            List<List<int>> rflipvh = new List<List<int>>();
+            rflipvh = flipH(rflipv);
             //solve3(solM, rflipvh);
-
             //////////////////////////////////////////
 
             /*/
@@ -685,36 +713,43 @@ namespace make_2
                 q++;
             }
             //shape without rotation or flipping
-            solve4(new List<List<int>>(solM), new List<List<int>>(shape4));
+            //shape without rotation or flipping
+            solve4(solM, shape4);
 
             //shape without rotation with flipping H
-            List<List<int>> fliph = flipH(new List<List<int>>(shape4));
-            solve4(new List<List<int>>(solM), new List<List<int>>(fliph));
+            List<List<int>> fliph = new List<List<int>>();
+            fliph = flipH(shape4);
+            solve4(solM, fliph);
 
             //shape without rotation with flipping V
-            List<List<int>> flipv = flipV(new List<List<int>>(shape4));
+            List<List<int>> flipv = new List<List<int>>();
+            flipv = flipVertical(shape4, shape4[0].Count, shape4.Count);
             //solve4(solM, flipv);
 
             //shape without rotation with flipping V and flipping H
-            List<List<int>> flipvh = flipH(new List<List<int>>(flipv));
+            List<List<int>> flipvh = flipH(flipv);
             //solve4(solM, flipvh);
 
             /////////////////////////////////////////
 
             //shape rotated 90d without flipping
-            List<List<int>> rotated = rotateVector(new List<List<int>>(shape4), shape4.Count, shape4[0].Count);
-            solve4(new List<List<int>>(solM), new List<List<int>>(rotated));
+            List<List<int>> rotated = new List<List<int>>();
+            rotated = rotateVector(shape4, shape4.Count, shape4[0].Count);
+            solve4(solM, rotated);
 
             //shape rotated 90d with flipping H
-            List<List<int>> rfliph = flipH(new List<List<int>>(rotated));
-            solve4(new List<List<int>>(solM), new List<List<int>>(rfliph));
+            List<List<int>> rfliph = new List<List<int>>();
+            rfliph = flipH(rotated);
+            solve4(solM, rfliph);
 
             //shape rotated 90d with flipping V
-            List<List<int>> rflipv = flipV(new List<List<int>>(rotated));
+            List<List<int>> rflipv = new List<List<int>>();
+            rflipv = flipVertical(rotated, rotated[0].Count, rotated.Count);
             //solve4(solM, rflipv);
 
             //shape rotated 90d with flipping V and flipping H
-            List<List<int>> rflipvh = flipH(new List<List<int>>(rflipv));
+            List<List<int>> rflipvh = new List<List<int>>();
+            rflipvh = flipH(rflipv);
             //solve4(solM, rflipvh);
 
             /*/////////////////////////////////////////
@@ -748,7 +783,7 @@ namespace make_2
         public void fit4(List<List<int>> solM, List<List<int>> shape, int tempi, int tempj, int i, int j)
         {
 
-
+            
             int q;
             int s;
             q = i;
